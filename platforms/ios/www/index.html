@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Sunlight Sensor App</title>
+        <script type="text/javascript" src="js/jquery-2.1.4.js"></script><!-- load jquery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                webdata();
+            });
+            function webdata() {
+                var z = 0;
+                var tablediv = $("#tabledata");
+                tablediv.append("<tr><th> Sensor Time </th><th> Sensor ID </th><th> Sensor Value </th></tr>");
+                $.getJSON("test.json", function(json) {
+                    $.each(json, function(i, data){
+                        tablediv.append("<tr><td>" + data.SensorTime + "</td><td>" + data.SensorID + "</td><td>" + data.SensorVal + "</td></tr>");
+                           z++;
+                    });
+                    $('#totalval').val(z);
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <!-- HEADER -->
+        <div class="header"><br><h1>SENSOR NETWORK</h1></div>
+        <!--VALUE COUNT -->
+        <br><br><br><br><br><br><br>
+        <div id="valcount" align:"center">
+            <h2>Values Collected =
+            <input id="totalval" type="textbox" value="" readonly/>
+            </h2>
+        </div>
+        <br>
+        <div id="webdata">
+            <table id="tabledata" style="width:80%" align="center">
+            </table>
+        </div>
+        <!-- FOOTER -->
+        <table class="footer">
+            <tr>
+                <td bgcolor="30b0ff"><a href="index.html">TABLE</a></td>
+                <td bgcolor="3080ff"><a href="graph.html">GRAPH</a></td>
+            </tr>
+        </table>
+    </body>
+</html>
