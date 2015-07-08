@@ -21,8 +21,11 @@
                 tablediv.append("<tr><th> Sensor Time </th><th> Sensor ID </th><th> Sensor Value </th></tr>");
                 $.getJSON("test.json", function(json) {
                     $.each(json, function(i, data){
+                        if(z<1000)
+                        {
                         tablediv.append("<tr><td>" + data.SensorTime + "</td><td>" + data.SensorID + "</td><td>" + data.SensorVal + "</td></tr>");
-                           z++;
+                        }
+                        z++;
                     });
                     $('#totalval').val(z);
                 });
