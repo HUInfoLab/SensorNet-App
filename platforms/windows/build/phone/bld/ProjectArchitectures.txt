@@ -1,0 +1,1 @@
+C:\Users\Main\Desktop\SensorNet-App-master\SensorNet-App-master\platforms\windows\CordovaApp.Phone.jsproj;neutral
