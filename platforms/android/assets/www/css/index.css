@@ -34,11 +34,10 @@ a:link
 .header {
     position:fixed;
     background-color: black;
-    border-bottom: 4px solid #333333;
     color:white;
     top:0px;
     width:100%;
-    height:15%;
+    height:17%;
     text-align: center;
     font-size: 1.1em;
     margin:auto;
@@ -52,13 +51,13 @@ a:link
     background-color: black;
     border-top: 4px solid #333333;
     position: fixed;
-    height:8%;
+    height:7%;
     width: 100%;
 }
 
 .active {
     width: 10%;
-    padding-top: 0.5em;  
+    padding-top: 0.5em;
     padding-bottom: 0.7em;
 }
 
@@ -72,16 +71,16 @@ a:link
 .tablediv {
     display: inline;
     padding-left: 21%;
-    padding-right: 17.75%;
+    padding-right: 17.5%;
 }
 .graphdiv {
     display: inline;
-    padding-left: 17.75%;
+    padding-left: 17.5%;
     padding-right: 21%;
 }
 
 .menubar {
-    height: 100%;
+    height: 114%;
     width: 1%;
     z-index: 100;
     padding-top: 0px;
