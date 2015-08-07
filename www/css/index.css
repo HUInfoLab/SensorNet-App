@@ -33,26 +33,61 @@ a:link
 
 .header {
     position:fixed;
-    background-color:#3080ff;
-    border-bottom: 1px solid black;
+    background-color: black;
     color:white;
     top:0px;
     width:100%;
-    height:15%;
+    height:17%;
     text-align: center;
     font-size: 1.1em;
     margin:auto;
 }
+
+.logo {
+    width:20%;
+}
 .footer {
     bottom:0px;
-    width:100%;
-    position:fixed;
-    border: 1px solid black;
-    color:white;
-    text-align:center;
-    font-size:1.1em;
-    height:7%;
+    background-color: black;
+    border-top: 4px solid #333333;
+    position: fixed;
+    height:8%;
+    width: 100%;
 }
+
+.active {
+    width: 10%;
+    padding-top: 0.5em;
+    padding-bottom: 0.7em;
+}
+
+.inactive {
+    width: 10%;
+    padding-top: 0.5em;
+    padding-bottom: 0.7em;
+    -webkit-filter: invert(50%);
+}
+
+.tablediv {
+    display: inline;
+    padding-left: 21%;
+    padding-right: 17.5%;
+}
+.graphdiv {
+    display: inline;
+    padding-left: 17.5%;
+    padding-right: 21%;
+}
+
+.menubar {
+    height: 110%;
+    width: 1.1%;
+    z-index: 100;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    -webkit-filter: invert(25%);
+}
+
 
 #webdata {
     width:100%;

@@ -7,7 +7,7 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Sunlight Sensor App</title>
-        <script type="text/javascript" src="js/jquery-2.1.4.js"></script><!-- load jquery -->
+        <script type="text/javascript" src="js/jquery.js"></script><!-- load jquery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -16,29 +16,34 @@
                 webdata();
             });
             function webdata() {
-                var z = 0;
-                var tablediv = $("#tabledata");
-                tablediv.append("<tr><th> Sensor Time </th><th> Sensor ID </th><th> Sensor Value </th></tr>");
-                $.getJSON("test.json", function(json) {
-                    $.each(json, function(i, data){
-                        if(z<1000)
-                        {
-                        tablediv.append("<tr><td>" + data.SensorTime + "</td><td>" + data.SensorID + "</td><td>" + data.SensorVal + "</td></tr>");
+                $.ajax({
+                    url: "https://api.mongolab.com/api/1/databases/testrun_sensornet/collections/myvalues?l=1000&apiKey=j27lV51zf5nLyptilEUtIq9sEUZm4mqh", //l = limit of values you want to be called, 34560 = 1 day worth of values
+                    type: "GET",
+                    dataType: 'json',
+                    jsonp: 'jsonp',
+                    success: function (data) {
+                        //console.log('success', data);
+                        var tablediv = $("#tabledata");
+                        tablediv.append("<tr><th> Sensor Time </th><th> Sensor ID </th><th> Sensor Value </th></tr>");
+                        for (var x = 0; x < data.length; x++) {
+                            tablediv.append("<tr><td>" + data[x].SensorTime + "</td><td>" + data[x].SensorID + "</td><td>" + data[x].SensorVal + "</td></tr>");
                         }
-                        z++;
-                    });
-                    $('#totalval').val(z);
+                        $('#totalval').val(data.length);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('error', errorThrown);
+                    }
                 });
             }
         </script>
     </head>
     <body>
         <!-- HEADER -->
-        <div class="header"><br><h1>SENSOR NETWORK</h1></div>
+        <div class="header"><br><img class="logo" src="img/icons/icon.png"/></div>
         <!--VALUE COUNT -->
-        <br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br>
         <div id="valcount" align:"center">
-            <h2>Values Collected =
+            <h2>Values Displayed Below =
             <input id="totalval" type="textbox" value="" readonly/>
             </h2>
         </div>
@@ -47,12 +52,12 @@
             <table id="tabledata" style="width:80%" align="center">
             </table>
         </div>
+        <br><br><br><br><br>
         <!-- FOOTER -->
-        <table class="footer">
-            <tr>
-                <td bgcolor="30b0ff"><a href="index.html">TABLE</a></td>
-                <td bgcolor="3080ff"><a href="graph.html">GRAPH</a></td>
-            </tr>
-        </table>
+        <div class="footer">
+            <div class="tablediv"><img class="active" src="img/icons/table.png"/></div>
+            <img class="menubar" src="img/bars/bar.png"></img>
+            <div class="graphdiv"><a href="graph.html"><img class="inactive" src="img/icons/graph.png"/></a></div>
+        </div>
     </body>
 </html>

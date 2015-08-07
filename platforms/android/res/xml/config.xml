@@ -8,10 +8,10 @@
     <allow-intent href="market:*" />
     <name>SensorNet</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        Application that displays data collected at sensor nodes in the HU InfoLab.
     </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+    <author email="david.nesbeth@gmail.com" href="http://huinfolab.weebly.com/">
+        David Nesbeth
     </author>
     <content src="index.html" />
     <preference name="permissions" value="none" />
@@ -27,7 +27,7 @@
     <preference name="show-splash-screen-spinner" value="true" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
-    <preference name="android-minSdkVersion" value="10" />
+    <preference name="android-minSdkVersion" value="14" />
     <preference name="android-installLocation" value="auto" />
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />

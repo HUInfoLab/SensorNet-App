@@ -15,79 +15,105 @@
             $(document).ready(function(){
                 chartdata();
             });
-            function chartdata() {
-                var chartData1 = [timeStamp: [], value: []];
-                var chartData2 = [timeStamp: [], value: []];
-                $.getJSON("test.json", function(json) {
-                    var count1 = 0;
-                    var count2 = 0;
-                    $.each(json, function(i, data){
-                        if (data.SensorID == "1111") {
-                           chartData1.push('timeStamp': (count1/12), 'value': data.SensorVal);
-                           count1++;
-                           //document.write("ID #1111");
-                           //document.write(chartData1.timeStamp);
+            function chartdata() { 
+                var chartData1 = [];
+                var chartData2 = [];
+                var count1 = 0;
+                var count2 = 0;
+                var y_axis = 0;
+                $.ajax({
+                    url: "https://api.mongolab.com/api/1/databases/testrun_sensornet/collections/myvalues?l=34560&apiKey=j27lV51zf5nLyptilEUtIq9sEUZm4mqh", //l = limit of values you want to be called, 34560 = 1 day worth of values
+                    type: "GET",
+                    dataType: 'json',
+                    jsonp: 'jsonp',
+                    success: function (data) {
+                        //console.log('success', data);
+                        for (var x = 0; x < data.length; x++) {
+                            if (data[x].SensorID == "1111") {
+                                chartData1.push({'timeStamp': (count1/12), 'value': data[x].SensorVal});
+                                count1++;
+                                //console.log("ID #1111");
+                                //console.log(chartData1.timeStamp);
+                            }
+                            else {
+                                chartData2.push({timeStamp: (count2/12), value: data[x].SensorVal});
+                                count2++;
+                                //console.log("ID #2222");
+                                //console.log(chartData2.value);
+                            }
+                            if (data[x].SensorVal > y_axis) {
+                                y_axis = data[x].SensorVal;
+                                //console.log(y_axis);
+                            }
+                        }
+                        //set x axis range
+                        var x_axis = 0;
+                        if (count2 > count1) {
+                            x_axis = (count2/12);   
                         }
                         else {
-                           chartData2.push('timeStamp': (count2/12), 'value': data.SensorVal);
-                           count2++;
-                           //document.write("ID #2222");
-                           //document.write(chartData2.timeStamp);
+                            x_axis = (count1/12);
                         }
-                    });
-                });
-
-                //start d3 parameter initialization
-                var vis = d3.select("#chart"),
-                WIDTH = 300,
-                HEIGHT = 200,
-                MARGINS = {
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 60
-                },
-                xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,1000]),
-                yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,1000]),
+          
+                        //set y axis range
+                        y_axis = (y_axis - (y_axis%100)) + 100;
                 
-                xAxis = d3.svg.axis()
-                .scale(xScale),
-                yAxis = d3.svg.axis()
-                .scale(yScale)
-                .orient("left");
-                
-                //fix xaxis to bottom
-                vis.append("svg:g")
-                .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-                .call(xAxis);
-                
-                //fix y axis to the left
-                vis.append("svg:g")
-                .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-                .call(yAxis);
-                
-                //define function that draws the lines from data passed to it setting the x and y variables
-                var lineGen = d3.svg.line()
-                .x(function(d) {
-                return xScale(d.timeStamp); //currently just index in the database TO-DO change to a real time stamp
-                })
-                .y(function(d) {
-                   return yScale(d.value);
-                })
-                .interpolate("basis");
-                
-                //Sensor ID #1
-                vis.append('svg:path')
-                .attr('d', lineGen(chartData1)) //pass your data object into here
-                .attr('stroke', '#3070ff') //style and color setting
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-                //Sensor ID #2
-                vis.append('svg:path')
-                .attr('d', lineGen(chartData2)) //pass your data object into here
-                .attr('stroke', 'red') //style and color setting
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
+                        //start d3 parameter initialization 
+                        var vis = d3.select("#chart"),
+                        WIDTH = 325,
+                        HEIGHT = 250,
+                        MARGINS = {
+                            top: 20,
+                            right: 20,
+                            bottom: 20,
+                            left: 60
+                        },  
+                        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0,(x_axis+(x_axis/10))]),
+                        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,y_axis]), 
+              
+                        xAxis = d3.svg.axis()
+                            .scale(xScale),      
+                        yAxis = d3.svg.axis()
+                            .scale(yScale)
+                            .orient("left");
+          
+                        //fix xaxis to bottom
+                        vis.append("svg:g")
+                            .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+                            .call(xAxis);
+              
+                        //fix y axis to the left 
+                        vis.append("svg:g")
+                            .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+                            .call(yAxis);
+          
+                        //define function that draws the lines from data passed to it setting the x and y variables
+                        var lineGen = d3.svg.line()
+                            .x(function(d) {
+                                return xScale(d.timeStamp); //currently just index in the database TO-DO change to a real time stamp
+                            })
+                            .y(function(d) {
+                                return yScale(d.value);
+                            })
+                            .interpolate("basis");
+           
+                        //Sensor ID #1
+                        vis.append('svg:path')
+                            .attr('d', lineGen(chartData1)) //pass your data object into here
+                            .attr('stroke', '#3070ff') //style and color setting
+                            .attr('stroke-width', 2)
+                            .attr('fill', 'none');  
+                        //Sensor ID #2
+                        vis.append('svg:path')
+                            .attr('d', lineGen(chartData2)) //pass your data object into here
+                            .attr('stroke', 'red') //style and color setting
+                            .attr('stroke-width', 2)
+                            .attr('fill', 'none');      
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('error', errorThrown);
+                    }
+                });  
             }
         </script>
     </head>
@@ -95,10 +121,10 @@
     
     <body>
         <!-- HEADER -->
-        <div class="header"><br><h1>SENSOR NETWORK</h1></div>
-        <br><br><br><br><br><br><br>
-        <div id="webdata">
-            <svg id="chart" width="300" height="200"></svg>
+        <div class="header"><br><img class="logo" src="img/icons/icon.png"/></div>
+        <br><br><br><br><br><br><br><br>
+        <div id="chartdata" style="text-align:center">
+            <svg id="chart" width="325" height="250"></svg>
         </div>
         <br><br>
         <p align="center"><b><u>X-Axis Scale</u></b><br>1 Unit = 1 Minute Since Start</p>
@@ -109,23 +135,21 @@
                     <th style="text-align:center" >ID Number</th>
                 </tr>
                 <tr>
-                    <td style="text-align:center"><img src="img/1111.png" alt="ID #1111"></td>
+                    <td style="text-align:center"><img src="img/keys/1111.png" alt="ID #1111"></td>
                     <td style="text-align:center">1111</td>
                 </tr>
                 <tr>
-                    <td style="text-align:center"><img src="img/2222.png" alt="ID #2222"></td>
+                    <td style="text-align:center"><img src="img/keys/2222.png" alt="ID #2222"></td>
                     <td style="text-align:center">2222</td>
                 </tr>
             </table>
             <br><br><br>
         </div>
-    </body>
-    <!-- FOOTER -->
-    <table class="footer">
-        <tr>
-            <td bgcolor="3080ff"><a href="index.html">TABLE</a></td>
-            <td bgcolor="30b0ff"><a href="graph.html">GRAPH</a></td>
-        </tr>
-    </table>
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="tablediv"><a href="index.html"><img class="inactive" src="img/icons/table.png"/></a></div>
+            <img class="menubar" src="img/bars/bar.png"></img>
+            <div class="graphdiv"><img class="active" src="img/icons/graph.png"/></div>
+        </div>
     </body>
 </html>
